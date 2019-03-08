@@ -3,8 +3,10 @@ import argparse
 import dataclasses
 from typing import (
     Optional,
-    List
+    List,
+    Iterator,
 )
+from . import analyzer
 
 
 @dataclasses.dataclass
@@ -35,9 +37,22 @@ class Arguments:
         )
 
 
+def iter_lines(files: List[str]) -> Iterator[str]:
+    if files:
+        for fname in files:
+            with open(fname) as f:
+                yield from f
+    else:
+        yield from sys.stdin
+
+
 def _main(args: List[str]) -> int:
     a = Arguments.from_args(args)
     print(a)
+    lines = iter_lines(a.files)
+    for line in lines:
+        result = analyzer.line_parser(line)
+        print(result['remote_host'], result['time_received_utc_datetimeobj'])
     return 0
 
 
