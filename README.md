@@ -4,6 +4,9 @@ Apache HTTP サーバのアクセスログを集計し、下記のデータを�
 - 各時間帯毎のアクセス件数
 - リモートホスト別のアクセス件数:
   アクセスの多いリモートホストの順にアクセス件数の一覧を表示する。
+  
+## Requirements
+* Python 3.7 or later
 
 ## Installation
 ```bash
