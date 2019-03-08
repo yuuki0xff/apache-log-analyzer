@@ -50,8 +50,9 @@ def _main(args: List[str]) -> int:
     a = Arguments.from_args(args)
     print(a)
     lines = iter_lines(a.files)
+    parser = analyzer.Parser()
     for line in lines:
-        result = analyzer.line_parser(line)
+        result = parser.parse(line)
         print(result['remote_host'], result['time_received_utc_datetimeobj'])
     return 0
 
