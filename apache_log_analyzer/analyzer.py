@@ -34,8 +34,26 @@ class Period:
     end: Optional[datetime] = dataclasses.field(default=None)
 
     def is_in_range(self, dt: datetime) -> bool:
-        # TODO
-        raise NotImplementedError()
+        """
+        >>> p = Period(datetime(2010, 1, 10), datetime(2010, 1, 20))
+        >>> p.is_in_range(datetime(2010, 1, 9, 23, 59, 59))
+        False
+        >>> p.is_in_range(datetime(2010, 1, 10))
+        True
+        >>> p.is_in_range(datetime(2010, 1, 19, 23, 59, 59))
+        True
+        >>> p.is_in_range(datetime(2010, 1, 20))
+        False
+
+        >>> p = Period()
+        >>> p.is_in_range(datetime(2010, 1, 1))
+        True
+        """
+        if self.start and dt < self.start:
+            return False
+        if self.end and self.end <= dt:
+            return False
+        return True
 
     @classmethod
     def from_str(cls, s: str) -> 'Period':
