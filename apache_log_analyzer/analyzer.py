@@ -71,6 +71,15 @@ class Period:
 
 
 class AccessCounter:
+    """
+    >>> AccessCounter(period=Period(), time_unit='hour')._convert_dt(
+    ...     datetime(1, 2, 3, 4, 5, 6, 7))
+    datetime.datetime(1, 2, 3, 4, 0)
+    >>> AccessCounter(period=Period(), time_unit='invalid')
+    Traceback (most recent call last):
+    ...
+    ValueError: invalid time_unit
+    """
     def __init__(self, period: Period, time_unit='hour'):
         self._period = period
         self._time_unit = time_unit
