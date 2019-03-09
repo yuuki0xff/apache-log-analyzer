@@ -130,7 +130,7 @@ class AccessCounter:
     def __iter__(self):
         return iter(self._counter)
 
-    def __getitem__(self, key: LogRecord) -> int:
+    def __getitem__(self, key: datetime) -> int:
         return self._counter[key]
 
     def add(self, rec: LogRecord):
