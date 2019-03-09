@@ -2,6 +2,7 @@ import sys
 import argparse
 import dataclasses
 from typing import (
+    Optional,
     List,
     Iterator,
 )
@@ -13,7 +14,7 @@ from . import analyzer
 @dataclasses.dataclass
 class Arguments:
     time_range: analyzer.Period
-    hosts: int
+    hosts: Optional[int]
     format: str
     files: List[str]
 
@@ -32,7 +33,7 @@ class Arguments:
         ns = cls.parser(prog).parse_args(args[1:])
         return cls(
             time_range=ns.time_range or None,
-            hosts=ns.hosts,
+            hosts=None if ns.hosts <= 0 else ns.hosts,
             format=ns.format,
             files=ns.files,
         )
