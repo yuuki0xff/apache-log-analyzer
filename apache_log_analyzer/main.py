@@ -52,14 +52,12 @@ def iter_lines(files: List[str]) -> Iterator[str]:
 
 def _main(args: List[str]) -> int:
     a = Arguments.from_args(args)
-    print(a)
     lines = iter_lines(a.files)
     parser = analyzer.Parser()
     req_per_hour = analyzer.AccessCounter(time_unit='hour', period=a.time_range)
     req_per_host = analyzer.HostCounter(period=a.time_range)
     for line in lines:
         result = parser.parse(line)
-        print(result['remote_host'], result['time_received_utc_datetimeobj'])
         req_per_hour.add(result)
         req_per_host.add(result)
 
