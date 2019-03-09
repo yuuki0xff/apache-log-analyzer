@@ -51,3 +51,8 @@ apache-log-analyzer [--time-range RANGE] [--hosts N] [--format FORMAT] /path/to/
     指定可能な値は、textまたはjson。
     デフォルト値はtext。
 ```
+
+## Test
+```bash
+$ make test
+```
