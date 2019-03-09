@@ -10,7 +10,7 @@ Apache HTTP サーバのアクセスログを集計し、下記のデータを�
 
 ## Installation
 ```bash
-$ python3 -m pip install -U git+https://url/to/this/repository
+$ python3 -m pip install -U git+https://github.com/yuuki0xff/apache-log-analyzer
 ```
 
 ## Usage
