@@ -53,7 +53,7 @@ class TextRenderer:
         print('[DateTime]: [Requests]')
         for dt in sorted(params.req_per_hour):  # 時刻でソート。
             count = params.req_per_hour[dt]
-            print(f'{dt:%04y-%02m-%02d %02H-%02M-%02S}: {count}')
+            print(f'{dt:%04Y-%02m-%02d %02H:%02M}: {count}')
         print()
         print('Requests per IP address:')
         print('[IP Address]: [Requests]')
