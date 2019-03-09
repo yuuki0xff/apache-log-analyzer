@@ -2,8 +2,10 @@ import dataclasses
 from datetime import datetime
 from typing import Optional
 import json
+import collections
+from datetime import datetime
 
-from .analyzer import (
+from apache_log_analyzer.analyzer import (
     AccessCounter,
     HostCounter,
 )
@@ -18,6 +20,35 @@ class Params:
 
 class TextRenderer:
     def render(self, params: Params):
+        """
+        >>> params = Params(
+        ...     req_per_hour=collections.Counter({
+        ...         datetime(2019, 1, 1, 12, 0): 100,
+        ...         datetime(2019, 1, 1, 13, 0): 100,
+        ...         datetime(2019, 1, 1, 14, 0): 200,
+        ...     }),
+        ...     req_per_host=collections.Counter({
+        ...         '10.0.0.1': 20,
+        ...         '10.0.0.2': 75,
+        ...         '10.0.0.3': 255,
+        ...         '10.0.0.4': 40,
+        ...         '10.0.0.5': 10,
+        ...     }),
+        ...     hosts=3,
+        ... )
+        >>> TextRenderer().render(params)
+        Requests per hour:
+        [DateTime]: [Requests]
+        2019-01-01 12:00: 100
+        2019-01-01 13:00: 100
+        2019-01-01 14:00: 200
+        <BLANKLINE>
+        Requests per IP address:
+        [IP Address]: [Requests]
+        10.0.0.3: 255
+        10.0.0.2: 75
+        10.0.0.4: 40
+        """
         print('Requests per hour:')
         print('[DateTime]: [Requests]')
         for dt in sorted(params.req_per_hour):  # 時刻でソート。
