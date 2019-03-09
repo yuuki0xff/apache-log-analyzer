@@ -14,6 +14,14 @@ DEFAULT_FORMAT = '%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"'
 
 
 class Parser(apache_log_parser.Parser):
+    """
+    >>> log = '10.2.3.4 - - [18/Apr/2005:09:10:47 +0900] "GET / HTTP/1.1" 200 854 "-" "Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)"'
+    >>> result = Parser().parse(log)
+    >>> result['remote_host']
+    '10.2.3.4'
+    >>> result['time_received_utc_datetimeobj']
+    datetime.datetime(2005, 4, 18, 0, 10, 47, tzinfo='0000')
+    """
     def __init__(self, format_string: Optional[str] = None):
         if format_string is None:
             format_string = DEFAULT_FORMAT
