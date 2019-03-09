@@ -6,6 +6,8 @@ from typing import (
     List,
     Iterator,
 )
+from datetime import datetime
+
 from . import analyzer
 
 
@@ -51,9 +53,24 @@ def _main(args: List[str]) -> int:
     print(a)
     lines = iter_lines(a.files)
     parser = analyzer.Parser()
+    req_per_hour = analyzer.AccessCounter(period='hour')
+    req_per_host = analyzer.HostCounter()
     for line in lines:
         result = parser.parse(line)
         print(result['remote_host'], result['time_received_utc_datetimeobj'])
+        # TODO: count up
+
+    print('Requests per hour:')
+    print('[DateTime]: [Requests]')
+    for dt in sorted(req_per_hour):  # 時刻でソート。
+        dt: datetime
+        count = req_per_hour[dt]
+        print(f'{dt:%04y-%02m-%02d %02H-%02M-%02S}: {count}')
+    print()
+    print('Requests per IP address:')
+    print('[IP Address]: [Requests]')
+    for host, count in req_per_host.most_common(a.hosts):  # アクセス数でソート
+        print(f'{host}: {count}')
     return 0
 
 
