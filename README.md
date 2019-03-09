@@ -22,8 +22,8 @@ Requests per hour:
 2019-01-01 13:00: 100
 2019-01-01 14:00: 200
 
-[IP Address]: [Requests]
 Requests per IP address:
+[IP Address]: [Requests]
 10.0.0.3: 255
 10.0.0.2: 75
 10.0.0.4: 40
