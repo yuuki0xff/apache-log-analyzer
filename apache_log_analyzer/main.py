@@ -73,8 +73,8 @@ def _main(args: List[str]) -> int:
     elif a.format == 'json':
         renderer.JsonRenderer().render(params)
     else:
-        # TODO
-        pass
+        # argparseで採りうる値を制限しているので、ここには到達しないはず
+        raise ValueError(f'invalid format: {a.format}')
     return 0
 
 
