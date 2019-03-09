@@ -60,6 +60,10 @@ class AccessCounter:
         # TODO
         return 0
 
+    def add(self, rec: LogRecord):
+        # TODO
+        pass
+
 
 class HostCounter:
     def __init__(self, period: Period): pass
@@ -70,3 +74,7 @@ class HostCounter:
             ('host0', 10),
             ('host1', 5),
         ]
+
+    def add(self, rec: LogRecord):
+        # TODO
+        pass

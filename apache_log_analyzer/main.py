@@ -57,7 +57,8 @@ def _main(args: List[str]) -> int:
     for line in lines:
         result = parser.parse(line)
         print(result['remote_host'], result['time_received_utc_datetimeobj'])
-        # TODO: count up
+        req_per_hour.add(result)
+        req_per_host.add(result)
 
     print('Requests per hour:')
     print('[DateTime]: [Requests]')
