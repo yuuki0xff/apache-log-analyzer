@@ -3,6 +3,7 @@ from typing import (
     Optional,
 )
 import dataclasses
+import collections
 from datetime import datetime
 
 import apache_log_parser
@@ -63,36 +64,43 @@ class Period:
 
 class AccessCounter:
     def __init__(self, period: Period, time_unit='hour'):
-        # TODO
-        pass
+        self._period = period
+        self._time_unit = time_unit
+        if time_unit == 'hour':
+            self._convert_dt = lambda dt: dt.replace(minute=0, second=0, microsecond=0)
+        else:
+            raise ValueError('invalid time_unit')
+        self._counter = collections.Counter()
 
     def __iter__(self):
-        # TODO
-        return iter([
-            datetime(2010, 1, 2),
-            datetime(2010, 1, 1),
-            datetime(2010, 1, 3),
-        ])
+        return iter(self._counter)
 
     def __getitem__(self, key: LogRecord) -> int:
-        # TODO
-        return 0
+        return self._counter[key]
 
     def add(self, rec: LogRecord):
-        # TODO
-        pass
+        dt = rec['time_received_utc_datetimeobj']
+        if not self._period.is_in_range(dt):
+            # 集計期間外なので無視
+            return
+
+        key = self._convert_dt(dt)
+        self._counter[key] += 1
 
 
 class HostCounter:
-    def __init__(self, period: Period): pass
+    def __init__(self, period: Period):
+        self._period = period
+        self._counter = collections.Counter()
+
     def most_common(self, n: Optional[int] = None):
-        # TODO
-        return [
-            ('host2', 20),
-            ('host0', 10),
-            ('host1', 5),
-        ]
+        return self._counter.most_common(n)
 
     def add(self, rec: LogRecord):
-        # TODO
-        pass
+        dt = rec['time_received_utc_datetimeobj']
+        if not self._period.is_in_range(dt):
+            # 集計期間外なので無視
+            return
+
+        key = rec['remote_host']
+        self._counter[key] += 1
