@@ -15,7 +15,8 @@ DEFAULT_FORMAT = '%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"'
 
 
 class Parser(apache_log_parser.Parser):
-    """
+    """ Apacheのログをパースする
+
     >>> log = '10.2.3.4 - - [18/Apr/2005:09:10:47 +0900] "GET / HTTP/1.1" 200 854 "-" "Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)"'
     >>> result = Parser().parse(log)
     >>> result['remote_host']
@@ -109,7 +110,12 @@ class Period:
 
 
 class AccessCounter:
-    """
+    """ 時間帯ごとのアクセス数を数える。
+
+    Arguments:
+        period - 集計期間
+        time_unit - 時間帯の長さを指定する。指定できる値は'hour'のみ。
+
     >>> AccessCounter(period=Period(), time_unit='hour')._convert_dt(
     ...     datetime(1, 2, 3, 4, 5, 6, 7))
     datetime.datetime(1, 2, 3, 4, 0)
@@ -144,6 +150,7 @@ class AccessCounter:
 
 
 class HostCounter:
+    """ 集計期間内のホスト別のアクセス数を数える """
     def __init__(self, period: Period):
         self._period = period
         self._counter = collections.Counter()

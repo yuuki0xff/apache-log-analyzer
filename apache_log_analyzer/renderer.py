@@ -13,6 +13,7 @@ from apache_log_analyzer.analyzer import (
 
 @dataclasses.dataclass
 class Params:
+    """ レンダラのパラメータ """
     req_per_hour: AccessCounter
     req_per_host: HostCounter
     hosts: Optional[int]
@@ -20,7 +21,9 @@ class Params:
 
 class TextRenderer:
     def render(self, params: Params):
-        """
+        """ 集計結果を、人間が読みやすいテキスト形式でレンダリングする。
+        レンダリング結果は、stdoutに出力する。
+
         >>> params = Params(
         ...     req_per_hour=collections.Counter({
         ...         datetime(2019, 1, 1, 12, 0): 100,
@@ -63,6 +66,9 @@ class TextRenderer:
 
 class JsonRenderer:
     def render(self, params: Params):
+        """ 集計結果を、json形式でレンダリングする。
+        レンダリング結果は、stdoutに出力する。
+        """
         js = {
             'request_per_hour': {
                 dt.isoformat(): params.req_per_hour[dt]
