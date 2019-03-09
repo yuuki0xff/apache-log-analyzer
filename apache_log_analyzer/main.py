@@ -2,7 +2,6 @@ import sys
 import argparse
 import dataclasses
 from typing import (
-    Optional,
     List,
     Iterator,
 )
@@ -13,7 +12,7 @@ from . import analyzer
 
 @dataclasses.dataclass
 class Arguments:
-    time_range: Optional[str]
+    time_range: analyzer.Period
     hosts: int
     format: str
     files: List[str]
@@ -21,7 +20,7 @@ class Arguments:
     @staticmethod
     def parser(prog: str):
         p = argparse.ArgumentParser(prog=prog)
-        p.add_argument('--time-range', default=None)
+        p.add_argument('--time-range', default=analyzer.Period(), type=analyzer.Period.from_str)
         p.add_argument('--hosts', type=int, default=0)
         p.add_argument('--format', choices=['text', 'json'], default='text')
         p.add_argument('files', nargs='*')
@@ -53,8 +52,8 @@ def _main(args: List[str]) -> int:
     print(a)
     lines = iter_lines(a.files)
     parser = analyzer.Parser()
-    req_per_hour = analyzer.AccessCounter(time_unit='hour')
-    req_per_host = analyzer.HostCounter()
+    req_per_hour = analyzer.AccessCounter(time_unit='hour', period=a.time_range)
+    req_per_host = analyzer.HostCounter(period=a.time_range)
     for line in lines:
         result = parser.parse(line)
         print(result['remote_host'], result['time_received_utc_datetimeobj'])

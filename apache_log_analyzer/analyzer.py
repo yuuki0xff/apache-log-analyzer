@@ -37,6 +37,11 @@ class Period:
         # TODO
         raise NotImplementedError()
 
+    @classmethod
+    def from_str(cls, s: str) -> 'Period':
+        # TODO
+        return Period()
+
 
 class AccessCounter:
     def __init__(self, period: Period, time_unit='hour'):
