@@ -2,6 +2,7 @@ from typing import (
     NewType,
     Optional,
 )
+import dataclasses
 from datetime import datetime
 
 import apache_log_parser
@@ -21,8 +22,24 @@ class Parser(apache_log_parser.Parser):
         return super().parse(log_line)
 
 
+@dataclasses.dataclass
+class Period:
+    """ 集計期間
+
+    Attributes:
+        start - 集計期間の開始日時。未指定の場合はNone
+        end - 集計期間の終了日時。endは集計期間に含まれない。未指定の場合はNone
+    """
+    start: Optional[datetime] = dataclasses.field(default=None)
+    end: Optional[datetime] = dataclasses.field(default=None)
+
+    def is_in_range(self, dt: datetime) -> bool:
+        # TODO
+        raise NotImplementedError()
+
+
 class AccessCounter:
-    def __init__(self, period='hour'):
+    def __init__(self, period: Period, time_unit='hour'):
         # TODO
         pass
 
@@ -40,6 +57,7 @@ class AccessCounter:
 
 
 class HostCounter:
+    def __init__(self, period: Period): pass
     def most_common(self, n: Optional[int] = None):
         # TODO
         return [

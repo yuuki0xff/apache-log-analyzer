@@ -53,7 +53,7 @@ def _main(args: List[str]) -> int:
     print(a)
     lines = iter_lines(a.files)
     parser = analyzer.Parser()
-    req_per_hour = analyzer.AccessCounter(period='hour')
+    req_per_hour = analyzer.AccessCounter(time_unit='hour')
     req_per_host = analyzer.HostCounter()
     for line in lines:
         result = parser.parse(line)
