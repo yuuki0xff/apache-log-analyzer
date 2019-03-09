@@ -7,6 +7,7 @@ import collections
 from datetime import datetime
 
 import apache_log_parser
+import pytz
 
 LogRecord = NewType('LogRecord', dict)
 
@@ -66,8 +67,45 @@ class Period:
 
     @classmethod
     def from_str(cls, s: str) -> 'Period':
-        # TODO
-        return Period()
+        """
+        # Set timezone to UTC.
+        # https://stackoverflow.com/a/1301528
+        >>> import os, time
+        >>> previous_tz = os.environ.get('TZ')
+        >>> os.environ['TZ'] = 'UTC'
+        >>> time.tzset()
+
+        >>> Period.from_str('2010-04-01/2015-03-31')
+        Period(start=datetime.datetime(2010, 4, 1, 0, 0, tzinfo=<UTC>), end=datetime.datetime(2015, 3, 31, 0, 0, tzinfo=<UTC>))
+        >>> Period.from_str('2010-04-01 10/2010-04-01 19:59')
+        Period(start=datetime.datetime(2010, 4, 1, 10, 0, tzinfo=<UTC>), end=datetime.datetime(2010, 4, 1, 19, 59, tzinfo=<UTC>))
+        >>> Period.from_str('2010-04-01 10:00+09:00/2010-04-01')
+        Period(start=datetime.datetime(2010, 4, 1, 1, 0, tzinfo=<UTC>), end=datetime.datetime(2010, 4, 1, 0, 0, tzinfo=<UTC>))
+        >>> Period.from_str('foo')
+        Traceback (most recent call last):
+        ...
+        ValueError: invalid syntax
+        >>> Period.from_str('foo/bar')
+        Traceback (most recent call last):
+        ...
+        ValueError: invalid syntax
+
+        # Restore the timezone
+        >>> if previous_tz:
+        ...     os.environ['TZ'] = previous_tz
+        ... else:
+        ...     del os.environ['TZ']
+        """
+        try:
+            start, end = s.split('/', maxsplit=2)
+            return Period(
+                # 1. astimezone()でタイムゾーンを付与
+                # 2. UTCに戻す
+                start=datetime.fromisoformat(start).astimezone().astimezone(pytz.UTC),
+                end=datetime.fromisoformat(end).astimezone().astimezone(pytz.UTC),
+            )
+        except ValueError:
+            raise ValueError('invalid syntax')
 
 
 class AccessCounter:
