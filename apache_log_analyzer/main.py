@@ -7,7 +7,7 @@ from typing import (
     Iterator,
 )
 
-from . import (
+from apache_log_analyzer import (
     analyzer,
     renderer,
 )
