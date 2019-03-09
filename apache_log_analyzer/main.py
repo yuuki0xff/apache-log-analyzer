@@ -6,9 +6,11 @@ from typing import (
     List,
     Iterator,
 )
-from datetime import datetime
 
-from . import analyzer
+from . import (
+    analyzer,
+    renderer,
+)
 
 
 @dataclasses.dataclass
@@ -61,17 +63,18 @@ def _main(args: List[str]) -> int:
         req_per_hour.add(result)
         req_per_host.add(result)
 
-    print('Requests per hour:')
-    print('[DateTime]: [Requests]')
-    for dt in sorted(req_per_hour):  # 時刻でソート。
-        dt: datetime
-        count = req_per_hour[dt]
-        print(f'{dt:%04y-%02m-%02d %02H-%02M-%02S}: {count}')
-    print()
-    print('Requests per IP address:')
-    print('[IP Address]: [Requests]')
-    for host, count in req_per_host.most_common(a.hosts):  # アクセス数でソート
-        print(f'{host}: {count}')
+    params = renderer.Params(
+        req_per_hour=req_per_hour,
+        req_per_host=req_per_host,
+        hosts=a.hosts,
+    )
+    if a.format == 'text':
+        renderer.TextRenderer().render(params)
+    elif a.format == 'json':
+        renderer.JsonRenderer().render(params)
+    else:
+        # TODO
+        pass
     return 0
 
 
